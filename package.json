@@ -27,6 +27,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "remark-attr": "^0.10.0",
+    "rxjs": "^6.6.3",
     "tailwindcss": "^1.4.4",
     "wouter": "^2.5.1"
   },

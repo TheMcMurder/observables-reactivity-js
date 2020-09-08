@@ -9,6 +9,7 @@ import Appear from "./components/Appear";
 import Code from "./components/Code";
 import Aside from "./components/Aside";
 import A from "./components/A";
+import Timeline from './components/Timeline/Timeline.js'
 
 import MDXContent from "./content.mdx";
 
@@ -23,6 +24,7 @@ render(
       Slide,
       Appear,
       Aside,
+      Timeline,
       code: Code,
       inlineCode: Base("code", "bg-gray-200 px-1 rounded"),
       a: A,

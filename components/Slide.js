@@ -5,17 +5,20 @@
 import React, { useRef } from "react";
 import cls from "classnames";
 import useAppearSequence from "./useAppearSequence";
+import useTimelineSequence from './Timeline/useTimelineSequence'
+import GlobalTimeline from './Timeline/GlobalTimeline.js'
 
 export default function Slide({ children, isActive, ...props }) {
   const slideRef = useRef();
 
   useAppearSequence(slideRef, isActive);
+  // useTimelineSequence(slideRef);
 
   return (
     <section
       ref={slideRef}
       className={cls(
-        "slide p-2 w-screen h-screen absolute flex items-center justify-center transition-opacity duration-300 transform",
+        "slide w-screen h-screen absolute transition-opacity duration-300 transform",
         {
           "opacity-100 translate-y-0": isActive,
           "opacity-0 translate-y-full invisible": !isActive,
@@ -24,7 +27,10 @@ export default function Slide({ children, isActive, ...props }) {
       aria-current={isActive ? "step" : null}
       {...props}
     >
-      <div>{children}</div>
+      <div className='relative p-2 h-full w-full flex items-center justify-center'>
+        <div>{children}</div>
+        <GlobalTimeline />
+      </div>
     </section>
   );
 }

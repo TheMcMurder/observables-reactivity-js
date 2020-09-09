@@ -6,6 +6,7 @@
 - <Appear>Intro to Observables</Appear>
 - <Appear>An attempt to convince you to use Observables more often</Appear>
 - <Appear>An attempt to simplify your learning</Appear>
+- <Appear>Star Wars</Appear>
 
 ---
 
@@ -25,6 +26,132 @@
 ---
 
 # Why should I care about Observables?
+- <Appear>Make your code cleaner</Appear>
+- <Appear>Make your code more flexible</Appear>
+- <Appear>Simplify complex code flows</Appear>
+
+---
+
+## Password change example
+- [React only](http://localhost:3000/react-1)
+- [React only 2](http://localhost:3000/react-2)
+- [React only 3](http://localhost:3000/react-3)
+
+---
+
+### What are we really doing here?
+```js
+// psuedo code
+inputChangeEvent // happening async
+  .then(getValue) // sync
+  .then(checkLength) // sync
+  .then(makeRequest) // async
+``` 
+---
+### maybe this?
+```js
+// psuedo code
+window.addEventListener('inputChange', inputChanged)
+let result = null
+
+function inputChanged() {
+  return Promise.resolve()
+    .then(getValue)
+    .then(checkLength)
+    .then(makeRequest)
+    .then((r) => result = r)
+}
+``` 
+- <Appear>No cancelling still</Appear>
+- <Appear>When is it safe to look at result?</Appear>
+
+---
+
+### Enter Reactive Programming!!!
+![Obi-wan Kenobi](https://vignette.wikia.nocookie.net/swfanon/images/b/ba/ObiWanKenobi.JPG/revision/latest?cb=20090421055937){.h-64}
+
+---
+
+### marble diagram - 1
+```js
+1. ------InputEvent---InputEvent---InputEvent---InputEvent-------->
+```
+---
+
+### marble diagram - 2
+```js
+1. ------InputEvent---InputEvent---InputEvent---InputEvent-------->
+                      pull off value
+2. ------"J"----------"JU"---------"JUS"--------"JUST"------------>
+                      check length > 2
+3. --------------------------------"JUS"--------"JUST"------------>
+...
+```
+
+---
+
+### marble diagram - 3
+#### Diagram has shifted to left 
+```js
+1. ------InputEvent---InputEvent----------------------------------->
+                      pull off value
+2. ------"JUS"--------"JUST"--------------------------------------->
+                      check length > 2
+3. ------"JUS"--------"JUST"--------------------------------------->
+                      make API request
+4. -------Response("JUS")----Response("JUST")---------------------->
+...
+```
+- <Appear>Out of order problem still (cancelling)</Appear>
+
+---
+
+### marble diagram - 4
+#### Solve order problem
+```js
+1. ------InputEvent---InputEvent----------------------------------->
+                      pull off value
+2. ------"JUS"--------"JUST"--------------------------------------->
+                      check length > 2
+3. ------"JUS"--------"JUST"--------------------------------------->
+            make API request with latest value (ignore others)
+4. --------------------Response("JUST")---------------------------->
+```
+---
+### marble diagram - 5
+#### Add debounce
+```js
+1. ------InputEvent---InputEvent--InputEvent----------------------->
+                      pull off value
+2. ------"JUS"--------"JUST"--"JUSTIN"----------------------------->
+                      check length > 2
+2. ------"JUS"--------"JUST"--"JUSTIN"----------------------------->
+                      Debounce (250ms)
+4. ------------------------------"JUSTIN"-------------------------->
+            make API request with latest value (ignore others)
+5. ---------------------------------Response("JUSTIN")------------->
+```
+
+---
+
+## Observable stream from marble diagrams
+```js
+const input$ = fromEvent(document.getElementById('#myinput'), 'input').pipe(
+  pluck((event) => event.value), // pull off value
+  //---"JU"-----"JUS"--"JUST"-"JUSTI"--"JUSTIN"-------------------->
+  filter((v) => v > 2), // check length > 2
+  //------------"JUS"--"JUST"-"JUSTI"--"JUSTIN"-------------------->
+  debounceTime(250), // debounce for 250ms
+  //-----------------------------------"JUSTIN"-------------------->
+  switchMap(v => APIRequest(v)), //request with latest (ignore)
+  //------------------------------------------Response("JUSTIN")--->
+)
+```
+[RXJS password example](http://localhost:3000/rxjs)
+
+---
+
+## Translations example
 
 ---
 

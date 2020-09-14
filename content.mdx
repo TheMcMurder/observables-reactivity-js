@@ -21,14 +21,56 @@
 ---
 
 # Are observables hard?
-## Yes, but they are easier if you learn the patterns instead of RxJS API
+Yes, but they are easier if you learn the patterns instead of RxJS API
 
 ---
 
-# Why should I care about Observables?
+# Why should I care about Observables/Reactivity?
 - <Appear>Make your code cleaner</Appear>
 - <Appear>Make your code more flexible</Appear>
 - <Appear>Simplify complex code flows</Appear>
+
+---
+
+# What is Reactive programming?
+<Aside>A paradigm that works with async data streams</Aside>
+
+---
+
+## Data streams
+<Aside>A collection of data/events over time</Aside>
+
+```js
+// an Array (collection) of data
+const data = [1,2,3]
+// stream A = .............1........2........3......
+// stream B = ........[1, 2, 3]......................
+```
+
+---
+
+## Existing streams?
+- <Appear>Click events</Appear>
+- <Appear>Data fetching</Appear>
+- <Appear>Modals</Appear>
+- <Appear>Most user interactions</Appear>
+
+---
+
+## Modeling streams - click events
+```js
+// user clicks over time
+1. --click------click---click-click--click-----click----click----->
+```
+
+---
+
+# Observables - Reactivity
+<Aside>Observables serve as an implementation of reactive programming</Aside>
+
+---
+
+# Observables vs Promises
 
 ---
 
@@ -152,6 +194,82 @@ const input$ = fromEvent(document.getElementById('#myinput'), 'input').pipe(
 ---
 
 ## Translations example
+- <Appear>A method that takes keys and returns the Translations</Appear>
+- <Appear>Group requests to the server</Appear>
+
+---
+
+## Translations example
+```js
+const translations = {}
+function getTranslation(key) => {
+  return translatations[key]
+}
+```
+---
+
+## Translations example
+```js
+const translations = {}
+// how does this get filled?
+function getTranslation(key) => {
+  return translatations[key]
+}
+```
+---
+
+## Translations example
+```js
+const translations = {}
+// how does this get filled?
+function getTranslation(key) => {
+  if (translations[key]) {
+    return translatations[key]
+  } else {
+    // async request from server
+  }
+}
+```
+---
+
+## Translations example
+requests over time
+
+---
+
+## Translations Example marble diagram
+```js
+  const nameTranslation$ = getTranslation('name')
+  const passwordTranslation$ = getTranslation('password')
+```
+```
+Name: -----req--|
+                  getFromCacheOrAPI
+      -----------response-|
+Password: -----req--|
+                  getFromCacheOrAPI
+          -------------response-|
+```
+
+---
+
+```
+Name: -----req--|
+                  getFromCacheOrAPI
+      -----------response-|
+Password: -----req--|
+                  getFromCacheOrAPI
+          -------------response-|
+```
+```
+// getFromCacheOrAPI
+1. --req--req----------req-----req---------->
+                debounce
+2. -------[req,req]-------------[req,req]--->
+        get translations from server
+3. -----------response-----------response--->
+            store value in cache
+```
 
 ---
 

@@ -74,6 +74,24 @@ const data = [1,2,3]
 
 ---
 
+## Lazy vs eager
+- Observables are lazy
+- Promises are eager
+
+```js
+const promise = getDataFromPromise(...) // request is made instantly
+const data$ = getDataFromObservable(...) // no request is made
+const sub = data$.subscribe(...) // request is made
+```
+
+---
+
+## How many Values
+- Observables can push 1 to many values to consumers
+- Promises can push 1 value to consumers
+
+---
+
 ## Password change example
 - [React only](http://localhost:3000/react-1)
 - [React only 2](http://localhost:3000/react-2)
@@ -193,7 +211,7 @@ const input$ = fromEvent(document.getElementById('#myinput'), 'input').pipe(
 
 ---
 
-## Translations example
+## Fetching Translations example
 - <Appear>A method that takes keys and returns the Translations</Appear>
 - <Appear>Group requests to the server</Appear>
 
